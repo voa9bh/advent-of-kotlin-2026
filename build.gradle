@@ -1,0 +1,41 @@
+plugins {
+  id 'org.jetbrains.kotlin.jvm' version '2.2.10'
+}
+
+group = 'bosch.bh.test'
+version = '1.0-SNAPSHOT'
+
+repositories {
+  maven {
+    credentials {
+      username "$rbArtifactoryUser"
+      password "$rbArtifactoryPassword"
+    }
+    url "https://rb-artifactory.bosch.com/artifactory/maven-central-remote/"
+  }
+
+  maven {
+    credentials {
+      username "$rbArtifactoryUser"
+      password "$rbArtifactoryPassword"
+    }
+    authentication {
+      basic(BasicAuthentication)
+    }
+    url = "https://rb-artifactory.bosch.com/artifactory/bhp-eat-spexjava-local/"
+  }
+
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+kotlin {
+  jvmToolchain(21)
+}
