@@ -18,6 +18,7 @@ class Day1 {
 
     val result4 = part2(data2)
     println("result4 = $result4")
+    check(result4 == 6770) { "expected 6770 but got $result4" }
   }
 
   private fun part1(lines: List<String>): Int {
@@ -56,26 +57,21 @@ class Day1 {
     for (line in lines) {
       val dir = line[0]
       val steps = line.substring(1).toInt()
-      val start = position
-      val end = when (dir) {
-        'L' -> (position - steps + 10000) % 100
-        'R' -> (position + steps) % 100
-        else -> position
-      }
 
       if (dir == 'L') {
-        // Moving left, check how many times we pass 0
-        val distance = (position - end + 100) % 100
-        passesOf0 += (position - steps until position).count { (it + 100) % 100 == 0 }
-        passesOf0 += distance / 100
+        repeat(steps) {
+          position--
+          if (position < 0) position += 100
+          if (position == 0) passesOf0++
+        }
       } else if (dir == 'R') {
-        // Moving right, check how many times we pass 0
-        val distance = (end - position + 100) % 100
-        passesOf0 += (position + 1..position + steps).count { it % 100 == 0 }
-        passesOf0 += distance / 100
+        repeat(steps) {
+          position++
+          if (position > 99) position -= 100
+          if (position == 0) passesOf0++
+        }
       }
 
-      position = end
       println("$position $passesOf0")
     }
     return passesOf0
