@@ -1,7 +1,4 @@
 import java.io.File
-import kotlin.collections.addAll
-import kotlin.collections.remove
-import kotlin.inc
 import kotlin.math.sqrt
 
 class Day8 {
@@ -47,8 +44,8 @@ class Day8 {
         for (j in 0 until coordinates.size) {
           if (i == j) continue
 
-          val cord1 = coordinates[i]
-          val cord2 = coordinates[j]
+          val cord1=coordinates[i]
+          val cord2=coordinates[j]
 
           val currentDistance = sqrt(
             (cord1[0] - cord2[0]).toDouble() * (cord1[0] - cord2[0]) +
@@ -66,40 +63,23 @@ class Day8 {
       lastMin = minDistance
 
       // store the connection
-
-      val list1 = connections.find { it.contains(minCoordinates.first) }
-      val list2 = connections.find { it.contains(minCoordinates.second) }
-
-      when {
-        list1 != null && list2 != null -> {
-          if (list1 === list2) {
-            // Both already in same cluster - skip this edge
-          } else {
-            // Different clusters - merge them
-            list1.addAll(list2)
-            connections.remove(list2)
-            foundConnections++
-          }
+      val foundList = connections.find { it.contains(minCoordinates.first) || it.contains(minCoordinates.second) }
+      if (foundList != null) {
+        var found=false
+        if(!foundList.contains(minCoordinates.first)) {
+          foundList.add(minCoordinates.first)
+          found=true
         }
-        list1 != null -> {
-          // Only first coordinate is in a cluster
-          if (!list1.contains(minCoordinates.second)) {
-            list1.add(minCoordinates.second)
-            foundConnections++
-          }
+        if(!foundList.contains(minCoordinates.second)) {
+          foundList.add(minCoordinates.second)
+          found=true
         }
-        list2 != null -> {
-          // Only second coordinate is in a cluster
-          if (!list2.contains(minCoordinates.first)) {
-            list2.add(minCoordinates.first)
-            foundConnections++
-          }
-        }
-        else -> {
-          // Neither coordinate is in a cluster - create new one
-          connections.add(mutableListOf(minCoordinates.first, minCoordinates.second))
+        if(found) {
           foundConnections++
         }
+      } else {
+        connections.add(mutableListOf(minCoordinates.first, minCoordinates.second))
+        foundConnections++
       }
 
     }
@@ -110,6 +90,11 @@ class Day8 {
     }
 
     val top3Clusters = connections.sortedByDescending { it.size }.take(3)
+
+    println("top3Clusters:")
+    top3Clusters.forEach {
+      println(it)
+    }
 
     val result = top3Clusters.fold(1) { acc, list -> acc * list.size }
 
