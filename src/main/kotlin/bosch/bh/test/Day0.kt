@@ -1,3 +1,5 @@
+package bosch.bh.test
+
 import java.io.File
 
 class Day0 {
